@@ -3,9 +3,52 @@
 <head>
     <meta charset="UTF-8">
     <title>Connect Four</title>
+    <link rel="stylesheet" href="./style.css">
 </head>
 <body>
-    <!--TODO: Build the Markup for your Game. Don't forget to style it in a cascading stylesheet. -->
+
+<!--TODO: Build the Markup for your Game. Don't forget to style it in a cascading stylesheet. -->
+
+<h1 class="title">CONNECT 4</h1>
+<h2 class="subtitle">SPYRO VS DARK SPYRO</h2>
+
+<div id="intro-screen">
+
+    <p class="story">Long ago, the Crystal Kingdom was protected by the legendary purple dragon Spyro —
+        a fearless guardian with glowing violet scales, blazing orange wings, and fire powerful enough to
+        light the skies. Wherever he flew, peace followed, and the kingdom lived safely under his protection.
+        But deep within Spyro, an ancient darkness slowly began to awaken. A mysterious shadow power fed on fear and
+        anger until one fateful night it transformed him into something far more dangerous — Dark Spyro.
+        His flames turned into destructive dark energy, storms covered the skies, and fear spread across the kingdom.
+        Now the Crystal Kingdom stands on the edge of collapse, trapped between light and darkness. Ancient enemies rise from the shadows,
+        the crystals lose their power, and nobody knows whether Spyro can still be saved.<br><br><br>
+        Only one dragon can restore the balance and defeat the darkness within — but to save the Crystal Kingdom, you must
+        complete the journey and win the game before everything is lost forever.</p>
+
+    <button id="start-btn">START GAME</button>
+</div>
+
+<div class="game-wrapper">
+    <div class="player-side" id="player-left">
+        <img src="./img/Spyro_Academy_Profile.webp" alt="Spyro">
+    </div>
+
+    <div class="center">
+        <div id="status"></div>
+        <div id="game-board"></div>
+        <button id="new-game-btn">NEW GAME</button>
+    </div>
+
+    <div class="player-side" id="player-right">
+        <img src="./img/DarkSpyro_Academy.webp" alt="Dark Spyro">
+    </div>
+</div>
+
+<script type="module" src="./js/model.connectfour.js"></script>
+<script type="module" src="./js/view.console.js"></script>
+<script type="module" src="./js/view.polished.js"></script>
+<script type="module" src="./js/controller.connectfour.js"></script>
+
 
 </body>
 </html>
