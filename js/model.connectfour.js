@@ -215,23 +215,3 @@ export let connectfourModel = {
     }
 
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

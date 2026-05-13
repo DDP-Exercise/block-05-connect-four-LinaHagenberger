@@ -36,4 +36,4 @@ export let connectfourConsoleView = {
             }
         );
     }
-};
+}
