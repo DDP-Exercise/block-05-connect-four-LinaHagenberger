@@ -37,3 +37,181 @@
 //      to your custom event.
 
 //TODO: Method to change the current player (and dispatch the according event).
+
+export let connectfourModel = {
+
+    rows: 6,
+    cols: 7,
+
+    board: [],
+
+    players: [
+        {
+            id: 1,
+            name: "Spyro",
+            color: "purple"
+        },
+        {
+            id: 2,
+            name: "Dark Spyro",
+            color: "black"
+        }
+    ],
+
+    currentPlayer: null,
+    gameOver: false,
+    winner: null,
+    isDraw: false,
+    winningStones: [],
+
+    events: new EventTarget(),
+
+    dispatchPlayerChange() {
+
+        this.events.dispatchEvent(
+            new CustomEvent("connect4:playerchange", {
+                detail: {
+                    currentPlayer: this.currentPlayer
+                }
+            })
+        );
+    },
+
+    dispatchStoneInserted(row, col) {
+
+        this.events.dispatchEvent(
+            new CustomEvent("connect4:stoneinserted", {
+                detail: {
+                    row: row,
+                    col: col
+                }
+            })
+        );
+    },
+
+    dispatchGameOver() {
+
+        this.events.dispatchEvent(
+            new CustomEvent("connect4:gameover", {
+                detail: {
+                    winner: this.winner,
+                    isDraw: this.isDraw,
+                    winningStones: this.winningStones
+                }
+            })
+        );
+
+    },
+
+    initBoard() {
+        this.board = Array.from(
+            {length: this.rows},
+
+            () => Array(this.cols).fill(null)
+        );
+    },
+
+    insertStone(col) {
+
+        if (this.gameOver) return false;
+
+        for (let row = this.rows - 1; row >= 0; row--) {
+
+            if (this.board[row][col] === null) {
+                this.board[row][col] = this.currentPlayer;
+                this.dispatchStoneInserted(row, col);
+                this.checkGameOver();
+
+                if (!this.gameOver) {
+                    this.switchPlayer();
+                }
+                return true;
+            }
+        }
+        return false;
+    },
+
+    checkGameOver() {
+
+        for (let row = 0; row < this.rows; row++) {
+            for (let col = 0; col < this.cols; col++) {
+
+                let player = this.board[row][col];
+
+                if (player === null) continue;
+
+                if (this.checkDirection(row, col, 0, 1, player)) return;
+                if (this.checkDirection(row, col, 1, 0, player)) return;
+                if (this.checkDirection(row, col, 1, 1, player)) return;
+                if (this.checkDirection(row, col, 1, -1, player)) return;
+            }
+        }
+        this.checkDraw();
+    },
+
+    checkDirection(row, col, dRow, dCol, player) {
+
+        let stones = [{ row, col }];
+        for (let i = 1; i <4; i++) {
+            let r = row + dRow * i;
+            let c = col + dCol * i;
+
+            if (!this.board[r] || this.board[r][c] !== player) {
+                return false;
+            }
+            stones.push({ row: r, col: c });
+        }
+
+        this.gameOver = true;
+        this.winner = player;
+        this.winningStones = stones;
+
+        this.dispatchGameOver();
+        return true;
+    },
+
+    checkDraw() {
+
+        for (let row = 0; row < this.rows; row++) {
+            for (let col = 0; col < this.cols; col++) {
+
+                if (this.board[row][col] === null) {
+                    return;
+                }
+            }
+        }
+        this.gameOver = true;
+        this.isDraw = true;
+
+        this.dispatchGameOver();
+    },
+
+    switchPlayer() {
+
+        if (this.gameOver) return;
+
+        if (this.currentPlayer.id === this.players[0].id) {
+            this.currentPlayer = this.players[1];
+        } else {
+            this.currentPlayer = this.players[0];
+        }
+        this.dispatchPlayerChange();
+    },
+
+    resetGame() {
+        this.board = Array.from(
+            { length: this.rows },
+            () => Array(this.cols).fill(null)
+        );
+
+        this.currentPlayer = this.players[0];
+
+        this.gameOver = false;
+        this.winner = null;
+        this.isDraw = false;
+        this.winningStones = [];
+
+        this.dispatchPlayerChange();
+    }
+
+}

@@ -45,3 +45,75 @@
 //      the view (or views, if you decide to make a console-view).
 
 //TODO: Add EventListeners, to forward the user inputs to the model.
+
+import {connectfourModel} from "./model.connectfour.js";
+import {connectfourView} from "./view.polished.js";
+import {connectfourConsoleView} from "./view.console.js";
+
+export let connectfourController = {
+
+    initIntro() {
+        let intro = document.querySelector("#intro-screen");
+        let game = document.querySelector(".game-wrapper");
+        let button = document.querySelector("#start-btn");
+
+        game.style.display = "none";
+
+        button.addEventListener(
+            "click",
+            () => {
+                intro.style.opacity = "0";
+
+                setTimeout(() => {
+                    intro.style.display = "none";
+                    game.style.display = "flex";
+                }, 500);
+            }
+        );
+    },
+
+    init() {
+        connectfourModel.currentPlayer = connectfourModel.players[0];
+        connectfourModel.initBoard();
+
+        connectfourView.init();
+        connectfourView.renderBoard();
+        connectfourView.renderCurrentPlayer(
+            connectfourModel.currentPlayer
+        );
+        this.addEventListener();
+        this.initIntro();
+    },
+
+    addEventListener() {
+        connectfourView.boardElement.addEventListener(
+            "click",
+            (event) => {
+                let col = event.target.dataset.col;
+                if (col === undefined)
+                    return;
+
+                let success = connectfourModel.insertStone(
+                    Number(col)
+                );
+                if (!success) {
+                    connectfourView.statusElement.textContent = "Column is full!";
+                }
+            }
+        );
+
+        let newGameButton =
+            document.querySelector("#new-game-btn");
+
+        newGameButton.addEventListener("click", () => {
+                connectfourModel.resetGame();
+                connectfourView.renderBoard();
+                connectfourView.renderCurrentPlayer(
+                    connectfourModel.currentPlayer
+                );
+            }
+        );
+    }
+};
+connectfourConsoleView.init();
+connectfourController.init();
